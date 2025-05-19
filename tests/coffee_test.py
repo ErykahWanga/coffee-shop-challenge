@@ -32,5 +32,3 @@ class TestCoffee(unittest.TestCase):
         Order(self.customer, self.coffee, 7.0)
         self.assertEqual(self.coffee.average_price(), 6.0)
 
-if __name__ == "__main__":
-    unittest.main()
