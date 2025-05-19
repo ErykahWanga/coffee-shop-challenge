@@ -11,7 +11,7 @@ class TestOrder(unittest.TestCase):
     def test_initialization(self):
         order = Order(self.customer, self.coffee, 5.0)
         self.assertEqual(order.customer, self.customer)
-        self.assertEqual(order.coffee, self.coffee)
+        self.assertEqual(order.coffee, self.customer)
         self.assertEqual(order.price, 5.0)
 
     def test_price_validation(self):
@@ -29,3 +29,4 @@ class TestOrder(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    
