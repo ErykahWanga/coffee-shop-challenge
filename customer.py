@@ -1,9 +1,7 @@
 class Customer:
-    _all = []
-
     def __init__(self, name):
         self.name = name
-        self._all.append(self)
+        self._orders = []
 
     @property
     def name(self):
@@ -11,28 +9,31 @@ class Customer:
 
     @name.setter
     def name(self, value):
-        if not isinstance(value, str):
-            raise TypeError("Name must be a string")
-        if not 1 <= len(value) <= 15:
-            raise ValueError("Name must be 1–15 characters")
-        self._name = value
+        if isinstance(value, str) and 1 <= len(value) <= 15:
+            self._name = value
+        else:
+            raise ValueError("Name must be a string between 1 and 15 characters.")
 
     def orders(self):
-        return [order for order in Order._all if order.customer == self]
+        return self._orders
 
     def coffees(self):
-        return list(set(order.coffee for order in self.orders()))
+        return list({order.coffee for order in self._orders})
 
     def create_order(self, coffee, price):
-        return Order(self, coffee, price)
+        from order import Order
+        order = Order(self, coffee, price)
+        self._orders.append(order)
+        coffee._orders.append(order)
+        return order
 
     @classmethod
     def most_aficionado(cls, coffee):
-        if not coffee.orders():
-            return None
-        customer_spending = {}
-        for order in coffee.orders():
-            customer = order.customer
-            customer_spending[customer] = customer_spending.get(customer, 0) + order.price
-        return max(customer_spending.items(), key=lambda x: x[1])[0]
-    
+        max_spent = 0
+        top_customer = None
+        for customer in set(order.customer for order in coffee.orders()):
+            total_spent = sum(o.price for o in customer.orders() if o.coffee == coffee)
+            if total_spent > max_spent:
+                max_spent = total_spent
+                top_customer = customer
+        return top_customer
