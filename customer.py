@@ -35,3 +35,4 @@ class Customer:
             customer = order.customer
             customer_spending[customer] = customer_spending.get(customer, 0) + order.price
         return max(customer_spending.items(), key=lambda x: x[1])[0]
+    
